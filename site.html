@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clínica de Saúde</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #eef2f7;
+        }
+        header {
+            background-color: #5a67d8;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        main {
+            padding: 2rem;
+            max-width: 900px;
+            margin: 2rem auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        select, input, button {
+            width: 100%;
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        button {
+            background-color: #5a67d8;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background-color: #4c51bf;
+        }
+        .schedule {
+            margin-top: 2rem;
+        }
+        .schedule h3 {
+            margin-bottom: 1rem;
+            color: #4a5568;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        ul li {
+            background-color: #edf2f7;
+            margin-bottom: 0.5rem;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+        }
+        ul li input[type="radio"] {
+            margin-right: 1rem;
+        }
+        .confirmation {
+            margin-top: 2rem;
+            padding: 1rem;
+            background-color: #38a169;
+            color: white;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 5px;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Clínica de Saúde - Agende Sua Consulta</h1>
+    </header>
+    <main>
+        <form id="appointment-form">
+            <div class="form-group">
+                <label for="branch">Selecione a Clínica:</label>
+                <select id="branch" required>
+                    <option value="" disabled selected>Escolha uma filial</option>
+                    <option value="principal">Clínica Principal</option>
+                    <option value="filial1">Filial 1</option>
+                    <option value="filial2">Filial 2</option>
+                    <option value="filial3">Filial 3</option>
+                    <option value="filial4">Filial 4</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="specialty">Selecione a Especialidade:</label>
+                <select id="specialty" required>
+                    <option value="" disabled selected>Escolha uma especialidade</option>
+                    <option value="medico">Médico</option>
+                    <option value="psicologo">Psicólogo</option>
+                    <option value="odontologo">Odontólogo</option>
+                    <option value="fisioterapeuta">Fisioterapeuta</option>
+                    <option value="nutricionista">Nutricionista</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="date">Escolha uma Data:</label>
+                <input type="date" id="date" required>
+            </div>
+            <button type="button" id="show-times-btn">Ver Horários Disponíveis</button>
+        </form>
+        <div class="schedule" id="schedule"></div>
+        <div class="confirmation" id="confirmation"></div>
+    </main>
+    <script>
+        const showTimesButton = document.getElementById('show-times-btn');
+        const scheduleDiv = document.getElementById('schedule');
+        const confirmationDiv = document.getElementById('confirmation');
+
+        showTimesButton.addEventListener('click', () => {
+            const branch = document.getElementById('branch').value;
+            const specialty = document.getElementById('specialty').value;
+            const date = document.getElementById('date').value;
+
+            if (!branch || !specialty || !date) {
+                alert('Por favor, preencha todos os campos.');
+                return;
+            }
+
+            scheduleDiv.innerHTML = `
+                <h3>Horários Disponíveis</h3>
+                <ul>
+                    <li><input type="radio" name="time" value="09:00"> 09:00 - 09:30</li>
+                    <li><input type="radio" name="time" value="10:00"> 10:00 - 10:30</li>
+                    <li><input type="radio" name="time" value="11:00"> 11:00 - 11:30</li>
+                    <li><input type="radio" name="time" value="14:00"> 14:00 - 14:30</li>
+                    <li><input type="radio" name="time" value="15:00"> 15:00 - 15:30</li>
+                </ul>
+                <button id="book-appointment-btn">Agendar Consulta</button>
+            `;
+
+            const bookButton = document.getElementById('book-appointment-btn');
+            bookButton.addEventListener('click', () => {
+                const selectedTime = document.querySelector('input[name="time"]:checked');
+                if (!selectedTime) {
+                    alert('Por favor, selecione um horário.');
+                    return;
+                }
+
+                confirmationDiv.innerHTML = `Consulta agendada com sucesso para o horário: ${selectedTime.value}`;
+                confirmationDiv.style.display = 'block';
+
+                // Resetando o formulário e limpando a exibição de horários
+                document.getElementById('appointment-form').reset();
+                scheduleDiv.innerHTML = '';
+            });
+        });
+    </script>
+</body>
+</html>
